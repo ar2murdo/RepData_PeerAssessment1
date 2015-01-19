@@ -1,0 +1,60 @@
+Peer Assessment 1
+========================================================
+
+###Step 1: Load data into R
+
+```{r}
+
+data <- read.table(unz("activity.zip", "activity.csv"), header=T, sep=",");
+head(data)
+
+```
+
+###Step 2: Preprocessing
+
+I will pull out results with associated numbers of steps (no NA values), and show the head of the leftover data.
+
+```{r}
+
+steps_data <- data[!is.na(data$steps),];
+head(steps_data)
+
+```
+
+
+###Step 3: Make a histogram of the total number of steps in a day.
+
+First, add up the number of steps per day, first by verifying that each day has a full set of measurements.
+
+```{r}
+dim(table(factor(steps_data$date)))
+max(table(factor(steps_data$interval)))
+min(table(factor(steps_data$interval)))
+
+```
+
+Since there are 53 dates included, and each possible interval appears 53 times, I am satisfied. Now I will add up steps per day, and make a histogram.
+
+```{r}
+steps <- rep(0, 53)
+for (i in 1:53) {
+  steps[i] <- sum(steps_data$steps[(1 + 60/5*24*(i-1)):(60/5*24*i)])
+  x <- (1 + 60/5*24*(i-1))
+  y <- (60/5*24*i)
+}
+
+hist(steps)
+
+```
+
+###Step 4: What is the mean and the median number of steps per day?
+
+```{r}
+mean(steps)
+median(steps)
+
+
+```
+
+
+###Step 5: Time series of average steps taken
